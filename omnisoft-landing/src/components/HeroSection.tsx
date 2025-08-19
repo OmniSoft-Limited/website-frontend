@@ -1,71 +1,96 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 
 interface HeroSectionProps {
   darkMode: boolean;
 }
 
-// --- Add a type for your project data ---
-interface Project {
-  id: number;
-  title: string;
-  category: string;
-  imageUrl: string;
-}
-
-// --- Dummy data for the project showcase carousel ---
-// TODO: Replace this with your actual project data
-const featuredProjects: Project[] = [
-  { id: 1, title: 'Project Alpha', category: 'E-commerce Platform', imageUrl: 'https://via.placeholder.com/500x350/3B82F6/FFFFFF?text=Project+Alpha' },
-  { id: 2, title: 'Project Beta', category: 'FinTech Solution', imageUrl: 'https://via.placeholder.com/500x350/10B981/FFFFFF?text=Project+Beta' },
-  { id: 3, title: 'Project Gamma', category: 'AI Analytics Dashboard', imageUrl: 'https://via.placeholder.com/500x350/8B5CF6/FFFFFF?text=Project+Gamma' },
-];
-
 const HeroSection: React.FC<HeroSectionProps> = ({ darkMode }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // Project showcase data - easily manageable from backend
+  const projects = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Modern shopping experience with AI recommendations',
+      image: 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800',
+      tech: ['React', 'Node.js', 'AI/ML']
+    },
+    {
+      id: 2,
+      title: 'Healthcare Dashboard',
+      description: 'Real-time patient monitoring and analytics',
+      image: 'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800',
+      tech: ['Vue.js', 'Python', 'IoT']
+    },
+    {
+      id: 3,
+      title: 'Financial Analytics',
+      description: 'Advanced trading algorithms and risk management',
+      image: 'https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=800',
+      tech: ['Angular', 'Java', 'Blockchain']
+    },
+    {
+      id: 4,
+      title: 'Smart City IoT',
+      description: 'Connected infrastructure management system',
+      image: 'https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=800',
+      tech: ['React Native', 'AWS', 'IoT']
+    }
+  ];
 
-  // --- NEW: Logic for the custom carousel ---
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev === featuredProjects.length - 1 ? 0 : prev + 1));
-  }, []);
+  const [currentProject, setCurrentProject] = useState(0);
 
+  // Auto-slide functionality
   useEffect(() => {
-    const slideInterval = setInterval(nextSlide, 3000); // Change slide every 3 seconds
-    return () => clearInterval(slideInterval); // Cleanup interval on component unmount
-  }, [nextSlide]);
+    const interval = setInterval(() => {
+      setCurrentProject((prev) => (prev + 1) % projects.length);
+    }, 4000); // Change slide every 4 seconds
 
+    return () => clearInterval(interval);
+  }, [projects.length]);
+
+  // Manual navigation
+  const goToProject = (index: number) => {
+    setCurrentProject(index);
+  };
+
+  // Handle CTA button click - ready for backend integration
   const handleGetStarted = () => {
     console.log('Get Started clicked');
+    // TODO: Navigate to signup or demo page
   };
 
   const handleLearnMore = () => {
     console.log('Learn More clicked');
+    // TODO: Scroll to features or navigate to about page
   };
 
   return (
-    <section className={`pt-8 pb-20 ${darkMode ? 'bg-slate-900' : 'bg-white'} transition-colors duration-200`}>
+    <section className={`pt-4 pb-20 ${darkMode ? 'bg-slate-900' : 'bg-white'} transition-colors duration-200`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Main Content (No changes here) */}
+          {/* Left Column - Main Content */}
           <div className="space-y-8">
-            <div className="inline-flex items-center space-x-2 bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-full">
-              <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className={`text-sm font-medium ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                AI-Powered Solutions
-              </span>
-            </div>
-            <h1 className={`text-4xl lg:text-6xl font-bold leading-tight ${
+            
+            
+
+            {/* Main Headline */}
+            <h1 className={`text-4xl lg:text-4xl font-bold leading-tight ${
               darkMode ? 'text-white' : 'text-gray-900'
             }`}>
               Enterprise Software
               <span className="text-blue-600 dark:text-blue-400"> Solutions</span>
             </h1>
+
+            {/* Subheading */}
             <p className={`text-xl leading-relaxed ${
               darkMode ? 'text-gray-300' : 'text-gray-600'
             }`}>
-              Streamline your business operations with our cutting-edge software solutions.
+              Streamline your business operations with our cutting-edge software solutions. 
               Built for scale, designed for efficiency, powered by AI.
             </p>
+
+            {/* Feature Highlights */}
             <div className="flex flex-wrap gap-6">
               <div className="flex items-center space-x-2">
                 <Shield className="w-5 h-5 text-green-500" />
@@ -86,6 +111,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ darkMode }) => {
                 </span>
               </div>
             </div>
+
+            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={handleGetStarted}
@@ -107,33 +134,92 @@ const HeroSection: React.FC<HeroSectionProps> = ({ darkMode }) => {
             </div>
           </div>
 
-          {/* --- MODIFIED: Right Column - Custom Project Showcase Carousel --- */}
+          {/* Right Column - Visual Content */}
           <div className="relative">
-            <div className={`relative w-full h-[350px] overflow-hidden rounded-2xl shadow-2xl ${darkMode ? 'border border-slate-700' : 'border border-gray-200'}`}>
-              {featuredProjects.map((project, index) => (
-                <div
-                  key={project.id}
-                  className={`absolute w-full h-full transition-opacity duration-1000 ease-in-out ${
-                    index === currentSlide ? 'opacity-100' : 'opacity-0'
-                  }`}
-                >
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/60 to-transparent rounded-b-2xl">
-                    <h3 className="text-xl font-bold text-white">{project.title}</h3>
-                    <p className="text-sm text-gray-200">{project.category}</p>
+            {/* Project Showcase Carousel */}
+            <div className={`rounded-2xl p-4 shadow-2xl ${
+              darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'
+            }`}>
+              <div className="space-y-4">
+                {/* Carousel Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Our Latest Projects
+                  </h3>
+                  <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {currentProject + 1} / {projects.length}
                   </div>
                 </div>
-              ))}
+
+                {/* Image Carousel */}
+                <div className="relative h-48 rounded-lg overflow-hidden">
+                  <div 
+                    className="flex transition-transform duration-500 ease-in-out h-full"
+                    style={{ transform: `translateX(-${currentProject * 100}%)` }}
+                  >
+                    {projects.map((project) => (
+                      <div key={project.id} className="w-full h-full flex-shrink-0 relative">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div className="absolute bottom-4 left-4 text-white">
+                          <h4 className="font-semibold text-lg">{project.title}</h4>
+                          <p className="text-sm opacity-90">{project.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Project Info */}
+                <div className="space-y-3">
+                  <h4 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {projects[currentProject].title}
+                  </h4>
+                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    {projects[currentProject].description}
+                  </p>
+                  
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-2">
+                    {projects[currentProject].tech.map((tech, index) => (
+                      <span
+                        key={index}
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          darkMode ? 'bg-slate-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+                        }`}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Navigation Dots */}
+                <div className="flex justify-center space-x-2 pt-2">
+                  {projects.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToProject(index)}
+                      className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                        index === currentProject
+                          ? darkMode ? 'bg-blue-400' : 'bg-blue-600'
+                          : darkMode ? 'bg-slate-600' : 'bg-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                {/* Stats Grid */}
+                
+              </div>
             </div>
 
-            {/* Floating AI Chatbot Button */}
-            <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg cursor-pointer">
-              <span className="text-white font-bold text-sm">AI</span>
-            </div>
+            {/* Floating AI Badge */}
+            
           </div>
         </div>
       </div>

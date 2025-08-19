@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import ServicesSection from './components/ServicesSection';
+import FloatingAIChatbot from './components/FloatingAIChatbot';
 import Footer from './components/Footer';
-
 
 function App() {
   // Dark mode state management - could be connected to user preferences in backend
@@ -62,6 +62,9 @@ function App() {
 
       {/* Footer - Links, contact info, newsletter */}
       <Footer darkMode={darkMode} />
+      
+      {/* Floating AI Chatbot - Available on all pages */}
+      <FloatingAIChatbot darkMode={darkMode} />
     </div>
   );
 }
